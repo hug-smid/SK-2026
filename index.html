@@ -345,10 +345,14 @@ if (sessionStorage.getItem('bryllupAuth') === '1') {
     </div>
     <div>
       <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.5rem;font-weight:300;color:var(--dark);margin-bottom:1.5rem;">Video<em style="font-style:italic;color:var(--gold);">helsing</em></h3>
+      <div class="form-group">
+        <label>Ditt namn</label>
+        <input type="text" id="vNavn" placeholder="Fornamn Etternamn">
+      </div>
       <div class="video-area" onclick="document.getElementById('videoInput').click()">
         <div style="font-size:2.5rem;">&#127909;</div>
         <strong style="font-size:0.85rem;color:var(--dark);display:block;margin-top:0.75rem;">Last opp ei videohelsingei</strong>
-        <p>Klikk her for å velje ei videofil (maks 200 MB)</p>
+        <p>Klikk her for å velje ei videofil (maks 30 MB)</p>
         <input type="file" id="videoInput" accept="video/*" style="display:none" onchange="handleVideo(this)">
       </div>
       <div class="success-msg" id="videoSuccess">Tusen takk for videohelsingei di! Vi gleder oss til å sjå den &#x2665;</div>
@@ -573,21 +577,53 @@ function renderHilsener() {
   `).join('');
 }
 
+// Hilsningar og videoar vert sende til ei Google Drive-mappe via Apps Script
+const GAS_URL = 'SETT_INN_APPS_SCRIPT_WEB_APP_URL_HER';
+const MAX_VIDEO_MB = 30;
+
+function sendTilDrive(params) {
+  return fetch(GAS_URL, {
+    method: 'POST',
+    mode: 'no-cors',
+    body: new URLSearchParams(params)
+  });
+}
+
 function sendHilsen() {
   const navn = document.getElementById('hNavn').value.trim();
   const melding = document.getElementById('hMelding').value.trim();
   if (!navn || !melding) { alert('Fyll inn namn og helsing.'); return; }
   hilsner.push({fra: navn, melding: melding});
   renderHilsener();
+  sendTilDrive({type: 'hilsen', navn: navn, melding: melding}).catch(() => {});
   document.getElementById('hilsenSuccess').style.display = 'block';
   document.getElementById('hNavn').value = '';
   document.getElementById('hMelding').value = '';
 }
 
 function handleVideo(input) {
-  if (input.files.length > 0) {
-    document.getElementById('videoSuccess').style.display = 'block';
+  if (!input.files.length) return;
+  const file = input.files[0];
+  const maxBytes = MAX_VIDEO_MB * 1024 * 1024;
+  if (file.size > maxBytes) {
+    alert('Videoen er for stor (maks ' + MAX_VIDEO_MB + ' MB). Prøv å komprimere den, eller velg ein kortare klipp.');
+    input.value = '';
+    return;
   }
+  const navn = document.getElementById('vNavn').value.trim() || 'Anonym';
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    const base64 = e.target.result.split(',')[1];
+    sendTilDrive({
+      type: 'video',
+      navn: navn,
+      fileName: file.name,
+      mimeType: file.type,
+      fileData: base64
+    }).catch(() => {});
+  };
+  reader.readAsDataURL(file);
+  document.getElementById('videoSuccess').style.display = 'block';
 }
 
 async function sendKontakt() {
