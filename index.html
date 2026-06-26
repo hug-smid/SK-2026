@@ -144,14 +144,14 @@ function sjekkPassord() {
   const input = document.getElementById('passordInput').value;
   if (input === PASSORD) {
     document.getElementById('passordSkjerm').style.display = 'none';
-    sessionStorage.setItem('bryllupAuth', '1');
+    localStorage.setItem('bryllupAuth', '1');
   } else {
     document.getElementById('passordFeil').style.display = 'block';
     document.getElementById('passordInput').value = '';
     document.getElementById('passordInput').focus();
   }
 }
-if (sessionStorage.getItem('bryllupAuth') === '1') {
+if (localStorage.getItem('bryllupAuth') === '1') {
   document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('passordSkjerm').style.display = 'none';
   });
