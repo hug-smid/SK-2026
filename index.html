@@ -778,9 +778,9 @@ async function fetchWeather() {
       </div>`;
     });
     widget.style.cssText = 'background:white;border-radius:2px;padding:2rem;margin-top:2rem;display:flex;gap:1.5rem;flex-wrap:wrap;align-items:stretch;';
-    widget.innerHTML = cards.join('') + `<div style="width:100%;text-align:right;padding-top:0.5rem"><a href="https://www.yr.no/nb/v%C3%A6rvarsel/daglig-tabell/2-3154050/Norge/Vestland/Vik/Vik" target="_blank" style="font-size:0.7rem;color:var(--gold);text-decoration:none;letter-spacing:0.1em;text-transform:uppercase;">Yr.no &rarr;</a></div>`;
+    widget.innerHTML = cards.join('') + `<div style="width:100%;text-align:right;padding-top:0.5rem"><a href="https://www.yr.no/nb/v%C3%A6rvarsel/daglig-tabell/5-53070/Norge/Vestland/Vik/Vik%20i%20Sogn%20III" target="_blank" style="font-size:0.7rem;color:var(--gold);text-decoration:none;letter-spacing:0.1em;text-transform:uppercase;">Yr.no &rarr;</a></div>`;
   } catch(e) {
-    widget.innerHTML = `<p style="font-size:0.9rem;color:var(--muted)">Klarte ikkje å hente vêret. Sjå <a href="https://www.yr.no/nb/v%C3%A6rvarsel/daglig-tabell/2-3154050/Norge/Vestland/Vik/Vik" target="_blank" style="color:var(--gold)">Yr.no for Vik</a> direkte.</p>`;
+    widget.innerHTML = `<p style="font-size:0.9rem;color:var(--muted)">Klarte ikkje å hente vêret. Sjå <a href="https://www.yr.no/nb/v%C3%A6rvarsel/daglig-tabell/5-53070/Norge/Vestland/Vik/Vik%20i%20Sogn%20III" target="_blank" style="color:var(--gold)">Yr.no for Vik</a> direkte.</p>`;
   }
 }
 renderHilsener();
